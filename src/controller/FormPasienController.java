@@ -11,18 +11,12 @@ import util.ValidationUtil;
 public class FormPasienController {
 
     @FXML
-    private TextField txtId,
-            txtNama,
-            txtUmur,
-            txtAlamat,
-            txtHP,
-            txtTekanan,
-            txtGula;
+    private TextField txtId, txtNama, txtUmur, txtAlamat, txtHP, txtTekanan, txtGula;
 
     @FXML
     private ComboBox<String> cbGender;
 
-    private PasienService pasienService =new PasienService();
+    private PasienService pasienService = new PasienService();
     private boolean modeEdit = false;
 
     @FXML
@@ -42,65 +36,60 @@ public class FormPasienController {
         cbGender.setValue(p.getGender());
         txtAlamat.setText(p.getAlamat());
         txtHP.setText(p.getNoHP());
-        txtTekanan.setText( String.valueOf( p.getTekananDarah()));
-        txtGula.setText( String.valueOf( p.getGulaDarah()));
+        txtTekanan.setText(String.valueOf(p.getTekananDarah()));
+        txtGula.setText(String.valueOf(p.getGulaDarah()));
     }
+
     @FXML
     public void handleSimpan(){
         try{
-                // =====================
-                // VALIDASI
-                // =====================
-                if(ValidationUtil.isEmpty(txtNama,"Nama wajib diisi")){
-                   return;
-                }
-                if(ValidationUtil.isEmpty(txtUmur,"Umur wajib diisi")){
-                   return;
-                }
-                if(ValidationUtil.isEmpty(cbGender,"Pilih gender")){
-                  return;
-                }
+            // =====================
+            // VALIDASI
+            // =====================
+            if(ValidationUtil.isEmpty(txtNama,"Nama wajib diisi")) return;
+            if(ValidationUtil.isEmpty(txtUmur,"Umur wajib diisi")) return;
+            if(ValidationUtil.isEmpty(cbGender,"Pilih gender")) return;
+            
+            // Validasi tambahan sesuai tugas modul
+            if(ValidationUtil.isEmpty(txtAlamat,"Alamat wajib diisi")) return;
+            if(ValidationUtil.isEmpty(txtHP,"No HP wajib diisi")) return;
+            if(ValidationUtil.isEmpty(txtTekanan,"Tekanan darah wajib diisi")) return;
+            if(ValidationUtil.isEmpty(txtGula,"Gula darah wajib diisi")) return;
 
-                // =====================
-                // OBJECT
-                // =====================
+            // =====================
+            // OBJECT
+            // =====================
+            Pasien p = new Pasien(
+                    modeEdit ? Integer.parseInt(txtId.getText()) : 0,
+                    txtNama.getText(),
+                    Integer.parseInt(txtUmur.getText()),
+                    cbGender.getValue(),
+                    txtAlamat.getText(),
+                    txtHP.getText(),
+                    Double.parseDouble(txtTekanan.getText()),
+                    Double.parseDouble(txtGula.getText())
+            );
 
-                Pasien p =new Pasien(modeEdit? Integer.parseInt(txtId.getText()): 0,
-                        txtNama.getText(),
-                        Integer.parseInt(txtUmur.getText()),
-                        cbGender.getValue(),
-                        txtAlamat.getText(),
-                        txtHP.getText(),
-                        Double.parseDouble(txtTekanan.getText()),
-                        Double.parseDouble(txtGula.getText())
-                );
+            // =====================
+            // SERVICE
+            // =====================
+            pasienService.simpan(p, modeEdit);
+            AlertUtil.success(modeEdit ? "Data berhasil diupdate" : "Data berhasil disimpan");
+            closeWindow();
 
-                // =====================
-                // SERVICE
-                // =====================
-                pasienService.simpan(p,modeEdit);
-                AlertUtil.success(modeEdit? "Data berhasil diupdate": "Data berhasil disimpan");
-                closeWindow();
-
-        }catch(Exception e){
-                AlertUtil.error(e.getMessage());
-                e.printStackTrace();
+        } catch(Exception e){
+            AlertUtil.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     public void handleBatal(){
-
         closeWindow();
     }
 
     private void closeWindow(){
-
-        Stage stage =
-                (Stage) txtNama
-                .getScene()
-                .getWindow();
-
+        Stage stage = (Stage) txtNama.getScene().getWindow();
         stage.close();
     }
 }

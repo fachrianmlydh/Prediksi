@@ -6,81 +6,30 @@ import model.Pasien;
 
 public class PasienService {
 
-    private PasienDAO dao =
-            new PasienDAO();
+    // Memanggil DAO (Data Access Object) yang berhubungan langsung ke Database
+    private PasienDAO pasienDAO = new PasienDAO();
 
-    // =========================
-    // GET ALL
-    // =========================
+    // Fungsi untuk mengambil semua data pasien
     public ObservableList<Pasien> getAll() {
-
-        return dao.getAllPasien();
+        return pasienDAO.getAllPasien();
     }
 
-    // =========================
-    // SEARCH
-    // =========================
-    public ObservableList<Pasien> search(
-            String keyword) {
-
-        return dao.searchPasien(keyword);
-    }
-
-    // =========================
-    // DELETE
-    // =========================
-    public void delete(int id)
-            throws Exception {
-
-        if (id <= 0) {
-
-            throw new Exception(
-                    "ID pasien tidak valid");
+    // Fungsi untuk simpan (Tambah Baru atau Update)
+    public void simpan(Pasien p, boolean modeEdit) {
+        if (modeEdit) {
+            pasienDAO.updatePasien(p);
+        } else {
+            pasienDAO.insertPasien(p);
         }
-
-        dao.deletePasien(id);
-    }
-// =========================
-// SIMPAN
-// =========================
-public void simpan(
-        Pasien pasien,
-        boolean modeEdit)
-        throws Exception {
-
-    // VALIDASI
-
-    if (pasien.getNama() == null
-            || pasien.getNama()
-            .trim()
-            .isEmpty()) {
-
-        throw new Exception(
-                "Nama pasien wajib diisi");
     }
 
-    if (pasien.getUmur() <= 0) {
-
-        throw new Exception(
-                "Umur tidak valid");
+    // Fungsi untuk hapus data
+    public void delete(int id) {
+        pasienDAO.deletePasien(id);
     }
 
-    if (pasien.getGender() == null) {
-
-        throw new Exception(
-                "Pilih gender");
+    // Fungsi untuk mencari pasien
+    public ObservableList<Pasien> search(String keyword) {
+        return pasienDAO.searchPasien(keyword);
     }
-
-    // INSERT / UPDATE
-
-    if (modeEdit) {
-
-        dao.updatePasien(pasien);
-
-    } else {
-
-        dao.insertPasien(pasien);
-    }
-}
-  
 }

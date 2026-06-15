@@ -1,83 +1,103 @@
 package controller;
 
 import javafx.fxml.FXML;
-// import javafx.fxml.FXMLLoader;
-// import javafx.scene.Parent;
-// import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-// import javafx.stage.Stage;
-// import javafx.animation.TranslateTransition;
-// import javafx.util.Duration;
+import model.Pasien;
+import service.PasienService;
 import util.SceneUtil;
 
 public class DashboardController {
-    @FXML
-    private VBox sidebar;
-    @FXML
-    private Label logoTitle;
-    @FXML
-    private Button btnDashboard,btnPasien,btnDokter,btnPetugas,btnObat;
+    @FXML private VBox sidebar;
+    @FXML private Label logoTitle;
+    @FXML private Button btnDashboard, btnPasien, btnDokter, btnPetugas, btnObat;
+    
     private boolean collapsed = false;
+    
+    @FXML private Label lblMaster, lblTransaksi, lblLaporan;
+    @FXML private Button btnPendaftaran, btnPemeriksaan, btnRekam, btnPrediksi;
+    
+    @FXML private Label lblTotalPasien; 
+    
+    // Bind objek TableView dari dashboard.fxml
+    @FXML private TableView<Pasien> tableDashboard; 
+    
+    private PasienService pasienService = new PasienService();
+
     @FXML
-    private Label lblMaster, lblTransaksi, lblLaporan;
-    @FXML
-    private Button btnPendaftaran,btnPemeriksaan,btnRekam,btnPrediksi;
+    public void initialize() {
+        // 1. Sinkronisasi Card Total Pasien
+        if (lblTotalPasien != null) {
+            int total = pasienService.getAll().size();
+            lblTotalPasien.setText(String.valueOf(total));
+        }
+
+        // 2. Mengisi Data ke Tabel Dashboard Utama
+        if (tableDashboard != null) {
+            // Memetakan kolom berdasarkan urutan indeks di FXML agar tidak perlu ubah file FXML
+            tableDashboard.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idPasien"));
+            tableDashboard.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("nama"));
+            tableDashboard.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("umur"));
+            tableDashboard.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("gender"));
+            tableDashboard.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("alamat"));
+
+            // Masukkan data dari database ke tabel dashboard
+            tableDashboard.setItems(pasienService.getAll());
+        }
+    }
 
     @FXML
     private void toggleSidebar(){
-
         if(!collapsed){
             sidebar.setPrefWidth(80);
             logoTitle.setVisible(false);
-            lblMaster.setVisible(false);
-            lblTransaksi.setVisible(false);
-            lblLaporan.setVisible(false);
+            if(lblMaster != null) lblMaster.setVisible(false);
+            if(lblTransaksi != null) lblTransaksi.setVisible(false);
+            if(lblLaporan != null) lblLaporan.setVisible(false);
+            
             btnDashboard.setText("🏠");
             btnPasien.setText("👨");
-            btnDokter.setText("🩺");
-            btnPetugas.setText("👩");
-            btnObat.setText("💊");
-            btnPendaftaran.setText("📝");
-            btnPemeriksaan.setText("🩻");
-            btnRekam.setText("📋");
+            if(btnDokter != null) btnDokter.setText("🩺");
+            if(btnPetugas != null) btnPetugas.setText("👩");
+            if(btnObat != null) btnObat.setText("💊");
+            if(btnPendaftaran != null) btnPendaftaran.setText("📝");
+            if(btnPemeriksaan != null) btnPemeriksaan.setText("🩻");
+            if(btnRekam != null) btnRekam.setText("📋");
             btnPrediksi.setText("🧠");
+            
             collapsed = true;
         }else{
             sidebar.setPrefWidth(240);
             logoTitle.setVisible(true);
-            lblMaster.setVisible(true);
-            lblTransaksi.setVisible(true);
-            lblLaporan.setVisible(true);
-            logoTitle.setText("SMART CLINIC");
+            if(lblMaster != null) lblMaster.setVisible(true);
+            if(lblTransaksi != null) lblTransaksi.setVisible(true);
+            if(lblLaporan != null) lblLaporan.setVisible(true);
+            
+            logoTitle.setText("PREDIKSI");
             btnDashboard.setText("🏠 Dashboard");
             btnPasien.setText("👨‍⚕ Pasien");
-            btnDokter.setText("🩺 Dokter");
-            btnPetugas.setText("👩‍💼 Petugas");
-            btnObat.setText("💊 Obat");
-            btnPendaftaran.setText("📝 Pendaftaran");
-            btnPemeriksaan.setText("🩻 Pemeriksaan");
-            btnRekam.setText("📋 Rekam Medis");
-            btnPrediksi.setText("🧠 Prediksi ML");
+            if(btnDokter != null) btnDokter.setText("🩺 Dokter");
+            if(btnPetugas != null) btnPetugas.setText("👩‍💼 Petugas");
+            if(btnObat != null) btnObat.setText("💊 Obat");
+            if(btnPendaftaran != null) btnPendaftaran.setText("📝 Pendaftaran");
+            if(btnPemeriksaan != null) btnPemeriksaan.setText("🩻 Pemeriksaan");
+            if(btnRekam != null) btnRekam.setText("📋 Rekam Medis");
+            btnPrediksi.setText("🧠 Prediksi Diabetes");
 
             collapsed = false;
         }
     }
+
     @FXML
     private void openPasien() {
         SceneUtil.openMaximizedWindow("/view/pasien.fxml","Data Pasien");
     }
+    
     @FXML
-    private void openDokter() {
-        //SceneUtil.openMaximizedWindow("/view/dokter.fxml","Data Dokter");
+    private void openPrediksi() {
+        SceneUtil.openMaximizedWindow("/view/prediksi.fxml","Prediksi Diabetes");
     }
-    @FXML
-    private void openPendaftaran() {
-        //SceneUtil.openMaximizedWindow("/view/pendaftaran.fxml","Pendaftaran");
-    }
-      @FXML
-    private void openPemeriksaan() {
-        //SceneUtil.openMaximizedWindow("/view/pemeriksaan.fxml","pemeriksaan");
-    }  
 }

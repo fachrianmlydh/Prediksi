@@ -1,58 +1,33 @@
 package model;
 
-import java.util.ArrayList;
-
-public class Pasien extends Person {
+public class Pasien {
 
     private int idPasien;
+    private String nama;
     private int umur;
     private String gender;
     private String alamat;
     private String noHP;
-
     private double tekananDarah;
     private double gulaDarah;
 
-    // RELASI OBJECT
-    private ArrayList<RekamMedis> daftarRekam;
-    private ArrayList<Prediksi> daftarPrediksi;
-
     // CONSTRUCTOR KOSONG
     public Pasien() {
-
-        super("");
-
-        daftarRekam = new ArrayList<>();
-        daftarPrediksi = new ArrayList<>();
     }
 
     // CONSTRUCTOR UTAMA
-    public Pasien(int idPasien,
-                  String nama,
-                  int umur,
-                  String gender,
-                  String alamat,
-                  String noHP,
-                  double tekananDarah,
-                  double gulaDarah) {
-
-        super(nama);
-
+    public Pasien(int idPasien, String nama, int umur, String gender, String alamat, String noHP, double tekananDarah, double gulaDarah) {
         this.idPasien = idPasien;
+        this.nama = nama;
         this.umur = umur;
         this.gender = gender;
         this.alamat = alamat;
         this.noHP = noHP;
-
         this.tekananDarah = tekananDarah;
         this.gulaDarah = gulaDarah;
-
-        daftarRekam = new ArrayList<>();
-        daftarPrediksi = new ArrayList<>();
     }
 
     // GETTER & SETTER
-
     public int getIdPasien() {
         return idPasien;
     }
@@ -117,53 +92,9 @@ public class Pasien extends Person {
         this.gulaDarah = gulaDarah;
     }
 
-    // RELASI OBJECT
-
-    public void tambahRekamMedis(RekamMedis rm) {
-
-        daftarRekam.add(rm);
-    }
-
-    public void tambahPrediksi(Prediksi p) {
-
-        daftarPrediksi.add(p);
-    }
-
-    public ArrayList<RekamMedis> getDaftarRekam() {
-
-        return daftarRekam;
-    }
-
-    public ArrayList<Prediksi> getDaftarPrediksi() {
-
-        return daftarPrediksi;
-    }
-
-    // POLYMORPHISM
-    @Override
-    public void tampilInfo() {
-
-        System.out.println(
-                "ID Pasien : " + idPasien);
-
-        System.out.println(
-                "Nama      : " + nama);
-
-        System.out.println(
-                "Umur      : " + umur);
-
-        System.out.println(
-                "Gender    : " + gender);
-
-        System.out.println(
-                "Tekanan   : " + tekananDarah);
-
-        System.out.println(
-                "Gula      : " + gulaDarah);
-    }
+    // Ini wajib ada agar di ComboBox halaman Prediksi yang muncul adalah namanya (bukan kode memori)
     @Override
     public String toString() {
-
         return nama;
     }
 }
